@@ -1,0 +1,6 @@
+# Arquivo de ambiente com segredos. NUNCA ENVIE ISSO!
+.env
+
+# Arquivos gerados pelo Python que não precisam ir para o repositório
+__pycache__/
+*.pyc
