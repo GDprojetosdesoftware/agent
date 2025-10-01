@@ -22,7 +22,7 @@ EXPOSE 8501
 # NOVO PASSO: Configuração do Health Check
 # Esta seção diz ao Docker como verificar se a aplicação está saudável.
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
-  CMD curl --fail http://localhost:8501/_stcore/health || exit 1
+    CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
 # 7. Defina o comando para iniciar a aplicação Streamlit.
 CMD ["streamlit", "run", "stocks.py", "--server.port=8501", "--server.address=0.0.0.0"]

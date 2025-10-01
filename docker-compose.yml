@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  agente:
+    # Constrói a imagem a partir do Dockerfile na pasta atual
+    build: .
+    # Reinicia o contêiner a menos que seja parado manualmente
+    restart: unless-stopped
+    # Mapeia a porta 8501 de fora (servidor) para dentro (contêiner)
+    ports:
+      - "8501:8501"
+    # Seção para variáveis de ambiente que serão definidas no Portainer
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
