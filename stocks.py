@@ -7,9 +7,11 @@ from agno.tools.yfinance import YFinanceTools
 
 load_dotenv()
 
+API_KEY = os.getenv("OPENAI_API_KEY")
+
 st.title("- Agente de Ações -")
 
-user_input = st.text_input("Digite o nome da ação ou pergunta:")
+user_input = st.text_input("Pesquise a cotação das empresas em tempo real")
 
 if user_input:
     agent = Agent(
@@ -19,6 +21,5 @@ if user_input:
         markdown=True,
     )
     run_output = agent.run(user_input, markdown=True)
-    # Se for um objeto RunOutput, pega o atributo 'content'
     resposta = getattr(run_output, 'content', run_output)
     st.markdown(resposta)
