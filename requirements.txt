@@ -3,3 +3,5 @@ python-dotenv
 agno
 openai
 yfinance
+requests
+google-generativeai

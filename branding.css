@@ -1,0 +1,87 @@
+/* Main App Background and Font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+
+html,
+body,
+[class*="css"] {
+  font-family: "Inter", sans-serif;
+}
+
+/* Hide Streamlit default branding */
+/* #MainMenu {visibility: hidden;} */
+footer {
+  visibility: hidden;
+}
+/* header {visibility: hidden;} */
+
+/* Professional Dark Mode Gradient Background */
+.stApp {
+  background: radial-gradient(circle at top left, #1a1a2e, #16213e, #0f3460);
+  color: #e0e0e0;
+}
+
+/* Chat Input Styling */
+.stChatInputContainer {
+  padding-bottom: 20px;
+}
+
+.stChatInputContainer textarea {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-radius: 12px;
+}
+
+.stChatInputContainer textarea:focus {
+  border-color: #00cec9;
+  box-shadow: 0 0 10px rgba(0, 206, 201, 0.2);
+}
+
+/* User Message Bubble */
+.stChatMessage[data-testid="user-message"] {
+  background-color: rgba(0, 206, 201, 0.15);
+  border-radius: 15px 15px 5px 15px;
+  border: 1px solid rgba(0, 206, 201, 0.2);
+}
+
+/* Assistant Message Bubble */
+.stChatMessage[data-testid="assistant-message"] {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 15px 15px 15px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Enforce text color in chat bubbles for mobile readability - NUCLEAR OPTION */
+.stChatMessage .stMarkdown,
+.stChatMessage .stMarkdown * {
+  color: #e0e0e0 !important;
+}
+
+/* Titles and Headers */
+h1,
+h2,
+h3 {
+  color: #00cec9 !important; /* Vibrant Cyan */
+  font-weight: 700;
+}
+
+/* Metric/Status Containers - Glassmorphism */
+div[data-testid="stMetricValue"] {
+  font-size: 24px;
+  color: #fab1a0;
+}
+
+/* Custom Buttons */
+.stButton button {
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.stButton button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+}
