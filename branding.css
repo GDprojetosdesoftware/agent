@@ -37,6 +37,24 @@ footer {
   box-shadow: 0 0 10px rgba(0, 206, 201, 0.2);
 }
 
+/* Login Form Container - Targeted via internal structure usually found in Authenticator */
+[data-testid="stForm"], .stForm {
+  background-color: rgba(22, 33, 62, 0.9); /* Slightly easier to read */
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 206, 201, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+/* Make the 'Login' header pop */
+[data-testid="stForm"] h2, .stForm h2 {
+    text-align: center;
+    color: #00cec9 !important;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
 /* User Message Bubble */
 .stChatMessage[data-testid="user-message"] {
   background-color: rgba(0, 206, 201, 0.15);
@@ -61,8 +79,30 @@ footer {
 h1,
 h2,
 h3 {
-  color: #00cec9 !important; /* Vibrant Cyan */
-  font-weight: 700;
+  color: #00cec9 !important; /* Fallback */
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #00cec9, #6c5ce7, #fab1a0, #00cec9);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  animation: gradient 5s ease infinite;
+  text-align: center;
+  font-weight: 800;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Metric/Status Containers - Glassmorphism */

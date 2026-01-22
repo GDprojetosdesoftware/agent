@@ -1,5 +1,8 @@
 import os
+import yaml
+from yaml.loader import SafeLoader
 import streamlit as st
+import streamlit_authenticator as stauth
 from dotenv import load_dotenv
 
 from agno.agent import Agent
@@ -7,7 +10,7 @@ from agno.models.openai import OpenAIChat
 from agno.models.google import Gemini
 from agno.tools.yfinance import YFinanceTools
 from tools.weather import get_current_weather
-from storage import ChatStorage  # New persistence layer
+from storage import ChatStorage
 
 # --- Load Environment Variables ---
 load_dotenv()
@@ -19,15 +22,52 @@ st.set_page_config(
     layout="wide",
 )
 
+# --- Authenticator Setup ---
+@st.cache_data
+def load_auth_config():
+    with open('auth.yaml') as file:
+        return yaml.load(file, Loader=SafeLoader)
+
+config = load_auth_config()
+
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days']
+)
+
 # --- Load Custom CSS ---
-def local_css(file_name):
+@st.cache_data
+def load_css(file_name):
     with open(file_name) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+        return f.read()
 
 try:
-    local_css("branding.css")
+    css_content = load_css("branding.css")
+    st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
 except FileNotFoundError:
     pass 
+
+# --- Login System (Streamlit Authenticator) ---
+try:
+    # Use columns to center and constrain the width of the login form
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        authenticator.login()
+except Exception as e:
+    st.error(e)
+
+if st.session_state["authentication_status"] is False:
+    st.error("Username/password is incorrect")
+    st.stop()
+elif st.session_state["authentication_status"] is None:
+    # Just show the login form without checking for errors
+    st.stop()
+    
+# --- Main Application (Only runs if authenticated) ---
+
+# --- Main Application (Only runs if authenticated) ---
 
 # --- Session State & Persistence Initialization ---
 if "storage" not in st.session_state:
@@ -36,45 +76,13 @@ if "storage" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = st.session_state.storage.load_history()
 
-if "authenticated" not in st.session_state:
-    # Check for Auto-Login Env Var
-    if os.getenv("AUTO_LOGIN", "false").lower() == "true":
-        st.session_state.authenticated = True
-    else:
-        st.session_state.authenticated = False
-
 if "selected_model" not in st.session_state:
     st.session_state.selected_model = "GPT-4o"
-
-# --- Login System ---
-def login_screen():
-    st.markdown("<h1 style='text-align: center; color: #00cec9;'>🔐 Acesso Restrito</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center;'>Identifique-se para acessar o sistema.</p>", unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        with st.form("login_form"):
-            username = st.text_input("Usuário", placeholder="admin")
-            password = st.text_input("Senha", type="password", placeholder="admin")
-            submit = st.form_submit_button("Entrar", use_container_width=True)
-            
-            if submit:
-                if username == "admin" and password == "admin":
-                    st.session_state.authenticated = True
-                    st.success("Logado com sucesso!")
-                    st.rerun()
-                else:
-                    st.error("Credenciais inválidas. Tente admin/admin")
-
-if not st.session_state.authenticated:
-    login_screen()
-    st.stop() # Stop execution here if not authenticated
-
-# --- Main Application (Only runs if authenticated) ---
 
 # --- Sidebar ---
 with st.sidebar:
     st.title("⚙️ Painel de Controle")
+    st.write(f"Bem-vindo, *{st.session_state['name']}*") # Show user name
     
     # Model Selection
     st.subheader("🤖 Modelo de IA")
@@ -97,15 +105,13 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
         
-    if st.button("Sair (Logout)"):
-        st.session_state.authenticated = False
-        st.rerun()
+    authenticator.logout() # Built-in logout button
     
     st.markdown("---")
     st.caption("v2.2.1 | Powered by Agno")
 
 # --- Header ---
-st.markdown("<h1 style='text-align: center'>🧠 Assistente Senior Full-Stack</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='gradient-text'>🧠 Assistente Senior Full-Stack</h1>", unsafe_allow_html=True)
 st.markdown(f"<p style='text-align: center; color: #a29bfe'>Rodando com <b>{st.session_state.selected_model}</b> | Programação, Finanças e Clima.</p>", unsafe_allow_html=True)
 
 
@@ -156,20 +162,40 @@ except Exception as e:
 
 # 1. Display existing history
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
+    avatar = "🧑‍💻" if message["role"] == "user" else "🤖"
+    with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
-# 2. Chat Input
+# 2. Suggestion Chips (Only if history is empty)
+if not st.session_state.messages:
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: #a29bfe;'>Sugestões Rápidas:</h4>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    
+    suggestion = None
+    if col1.button("🌦️ Clima em SP", use_container_width=True):
+        suggestion = "Como está o clima em São Paulo agora?"
+    if col2.button("💻 Criar Componente", use_container_width=True):
+        suggestion = "Crie um componente de Botão em React usando Tailwind."
+    if col3.button("📈 Dólar Hoje", use_container_width=True):
+        suggestion = "Qual a cotação do Dólar hoje?"
+        
+    if suggestion:
+        # Add to state and rerun to process immediately
+        st.session_state.messages.append({"role": "user", "content": suggestion})
+        st.rerun()
+
+# 3. Chat Input
 if prompt := st.chat_input("Em que posso ajudar hoje, Sr. Engenheiro?"):
     # Add user message to state
     st.session_state.messages.append({"role": "user", "content": prompt})
     
     # Show user message immediately
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar="🧑‍💻"):
         st.markdown(prompt)
 
     # Generate response
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="🤖"):
         with st.spinner(f"Processando com {st.session_state.selected_model}..."):
             try:
                 # Build context from history

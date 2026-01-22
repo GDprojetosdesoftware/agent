@@ -1,0 +1,12 @@
+credentials:
+  usernames:
+    admin:
+      email: admin@example.com
+      name: Admin User
+      password: $2b$12$ygE294CzzUqlTupIcJzxkeuUWaRfmGp5kPV2G6ED9/XEG4Vd4vjyq
+cookie:
+  expiry_days: 30
+  key: some_random_key
+  name: agent_auth_cookie
+preauthorized:
+  emails: []
