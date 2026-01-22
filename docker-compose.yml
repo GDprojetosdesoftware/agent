@@ -12,3 +12,5 @@ services:
     # Seção para variáveis de ambiente que serão definidas no Portainer
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - AUTO_LOGIN=true

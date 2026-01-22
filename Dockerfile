@@ -1,5 +1,5 @@
 # 1. Use uma imagem base oficial do Python.
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # 2. Defina o diretório de trabalho dentro do contêiner.
 WORKDIR /app
@@ -25,4 +25,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
     CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
 # 7. Defina o comando para iniciar a aplicação Streamlit.
-CMD ["streamlit", "run", "stocks.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]
