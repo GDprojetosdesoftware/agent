@@ -47,7 +47,7 @@ try:
     css_content = load_css("branding.css")
     st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
 except FileNotFoundError:
-    pass 
+    pass
 
 # --- Login System (Streamlit Authenticator) ---
 try:
