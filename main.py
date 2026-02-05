@@ -23,7 +23,6 @@ st.set_page_config(
 )
 
 # --- Authenticator Setup ---
-@st.cache_data
 def load_auth_config():
     with open('auth.yaml') as file:
         return yaml.load(file, Loader=SafeLoader)
