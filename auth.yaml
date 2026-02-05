@@ -1,12 +1,12 @@
 cookie:
   expiry_days: 30
   key: new_random_key_v2
-  name: agent_auth_cookie_v2
+  name: agent_auth_cookie_v3
 credentials:
   usernames:
-    admin:
-      email: admin@example.com
-      name: Admin User
-      password: $2b$12$RYWOgT.8OErWGGn.YgTGH.v8NAe6huAZVyYKKELJCvC1qMRW8FL5i
+    Guilherme:
+      email: Guilherme@example.com
+      name: Guilherme
+      password: $2b$12$EM/2oqQcj5RNoyxdrSlsPO7Cy3tKy0fmwaUBLG7CTpMJHiT5eA0EC
 preauthorized:
   emails: []
