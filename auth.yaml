@@ -1,7 +1,7 @@
 cookie:
   expiry_days: 30
-  key: some_random_key
-  name: agent_auth_cookie
+  key: new_random_key_v2
+  name: agent_auth_cookie_v2
 credentials:
   usernames:
     admin:

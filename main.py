@@ -54,6 +54,7 @@ try:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         authenticator.login()
+        st.caption("v2.1.4 (Debug Mode)")
 except Exception as e:
     st.error(e)
 
