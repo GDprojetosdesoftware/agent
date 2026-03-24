@@ -7,6 +7,6 @@ credentials:
     Guilherme:
       email: Guilherme@example.com
       name: Guilherme
-      password: $2b$12$EM/2oqQcj5RNoyxdrSlsPO7Cy3tKy0fmwaUBLG7CTpMJHiT5eA0EC
+      password: $2b$12$5hIEEqY19SjP2bvmfIse3uGT8/FxiZxfmCpTd2p/l9pJEJaFBAVNq
 preauthorized:
   emails: []
